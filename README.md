@@ -16,7 +16,7 @@ var lambdaUploader = require('lambda-uploader');
 
 lambdaUploader.uploadFunction(
 
-    'us-east-1',
+    'us-east-1', // Region
     'my-awesome-function', // Function Name
     '/path/to/lambda-function', // Lambda Function Source Directory
     'index.handler', // Handler Name
