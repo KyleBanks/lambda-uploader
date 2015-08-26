@@ -1,0 +1,21 @@
+{
+  "name": "lambda-uploader",
+  "version": "1.0.0",
+  "description": "Manages the creation and uploading of an AWS Lambda function from a source directory.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/KyleBanks/lambda-uploader"
+  },
+  "author": "Kyle Banks",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KyleBanks/lambda-uploader/issues"
+  },
+  "homepage": "https://github.com/KyleBanks/lambda-uploader",
+  "dependencies": {
+    "archiver": "^0.15.0",
+    "async": "^1.4.2",
+    "aws-sdk": "^2.1.47"
+  }
+}
