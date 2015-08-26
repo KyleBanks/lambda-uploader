@@ -32,6 +32,7 @@ module.exports = {
      * Uploads a source directory to AWS Lambda, either creating a new function or overwriting
      * the function with the specified name if it already exists.
      *
+     * @param region {String}
      * @param name {String}
      * @param directoryPath {String}
      * @param handler {String} The name of the function handler in the format of "<filename>.<exported-function-name>"
@@ -41,7 +42,11 @@ module.exports = {
      * @param timeout {Number} The function execution time at which Lambda should terminate the function, in seconds.
      * @param cb {function(Error)}
      */
-    uploadFunction: function(name, directoryPath, handler, role, memory, timeout, cb) {
+    uploadFunction: function(region, name, directoryPath, handler, role, memory, timeout, cb) {
+        AWS.config.update({
+            region: region
+        });
+
         async.waterfall([
 
             /**

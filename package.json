@@ -1,6 +1,6 @@
 {
   "name": "lambda-uploader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manages the creation and uploading of an AWS Lambda function from a source directory.",
   "main": "index.js",
   "repository": {
