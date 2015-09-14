@@ -1,4 +1,5 @@
 # lambda-uploader
+[![npm version](https://badge.fury.io/js/lambda-uploader.svg)](http://badge.fury.io/js/lambda-uploader)
 
 A Node.js module for uploading a source directory to [AWS Lambda](https://aws.amazon.com/lambda/) as a function. 
 
