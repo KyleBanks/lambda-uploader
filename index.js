@@ -19,7 +19,7 @@ var AWS = require('aws-sdk'),
 /**
  * @private
  */
-var testMode = process.env.LAMBDA_UPLOADER_TEST;
+var _testMode = process.env.LAMBDA_UPLOADER_TEST;
 
 var _lambda = new AWS.Lambda(
     {
@@ -31,7 +31,7 @@ var _lambda = new AWS.Lambda(
  * Internal helper method for debug logging in test mode.
  */
 function _log() {
-    if (testMode) {
+    if (_testMode) {
         console.log.apply(console, arguments);
     }
 }
@@ -134,7 +134,7 @@ module.exports = {
 
 };
 
-if (testMode) {
+if (_testMode) {
     module.exports.AWS = AWS;
     module.exports.lambda = _lambda;
     module.exports.fs = fs;
