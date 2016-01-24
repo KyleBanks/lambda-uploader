@@ -122,7 +122,6 @@ module.exports = {
 
         ], function(err) {
             if (err) {
-                _log("ERROR: %s", err);
                 _log(err);
             }
 
