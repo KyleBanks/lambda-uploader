@@ -5,23 +5,36 @@
  *
  * Created by kylewbanks on 15-02-28.
  */
+'use strict';
 
 /**
  * @imports
  */
-var AWS = require('aws-sdk');
-var async = require('async');
-var fs = require('fs');
-var archiver = require('archiver');
+var AWS = require('aws-sdk'),
+    async = require('async'),
+    fs = require('fs'),
+    archiver = require('archiver'),
+    util = require('util');
 
 /**
  * @private
  */
+var testMode = process.env.LAMBDA_UPLOADER_TEST;
+
 var _lambda = new AWS.Lambda(
     {
         apiVersion: '2014-11-11'
     }
 );
+
+/**
+ * Internal helper method for debug logging in test mode.
+ */
+function _log() {
+    if (testMode) {
+        console.log.apply(console, arguments);
+    }
+}
 
 /**
  * @public
@@ -55,11 +68,14 @@ module.exports = {
              * @param next {function(Error, String)}
              */
             function(next) {
-                var zipFilePath = 'tmp-lambda-func.zip';
+                var zipFilePath = util.format('%s.lambda.tmp.zip', new Date().getTime());
+                _log("Generating zip file: %s", zipFilePath);
+
                 var zipStream = fs.createWriteStream(zipFilePath);
                 var archive = archiver('zip');
 
                 zipStream.on('close', function() {
+                    _log("Zip stream closed");
                     next(null, zipFilePath);
                 });
 
@@ -77,6 +93,7 @@ module.exports = {
              * @param next {function(Error, String)}
              */
             function(zipFilePath, next) {
+                _log("Uploading function...");
                 _lambda.uploadFunction({
                     FunctionName: name,
                     FunctionZip: fs.readFileSync(zipFilePath),
@@ -87,6 +104,7 @@ module.exports = {
                     MemorySize: memory,
                     Timeout: timeout
                 }, function(err) {
+                    _log("Upload complete");
                     next(err, zipFilePath);
                 });
             },
@@ -98,10 +116,26 @@ module.exports = {
              * @param next {function(Error)}
              */
             function(zipFilePath, next) {
+                _log("Deleting zipped lambda function");
                 fs.unlink(zipFilePath, next);
             }
 
-        ], cb);
+        ], function(err) {
+            if (err) {
+                _log("ERROR: %s", err);
+                _log(err);
+            }
+
+            if (cb && typeof cb === 'function') {
+                cb(err);
+            }
+        });
     }
 
 };
+
+if (testMode) {
+    module.exports.AWS = AWS;
+    module.exports.lambda = _lambda;
+    module.exports.fs = fs;
+}
