@@ -21,12 +21,6 @@ var AWS = require('aws-sdk'),
  */
 var _testMode = process.env.LAMBDA_UPLOADER_TEST;
 
-var _lambda = new AWS.Lambda(
-    {
-        apiVersion: '2014-11-11'
-    }
-);
-
 /**
  * Internal helper method for debug logging in test mode.
  */
@@ -59,6 +53,13 @@ module.exports = {
         AWS.config.update({
             region: region
         });
+
+        // Make sure the lambda instance is instantiated after the AWS.config.update
+        var lambda = new AWS.Lambda(
+            {
+                apiVersion: '2014-11-11'
+            }
+        );
 
         async.waterfall([
 
@@ -94,7 +95,7 @@ module.exports = {
              */
             function(zipFilePath, next) {
                 _log("Uploading function...");
-                _lambda.uploadFunction({
+                lambda.uploadFunction({
                     FunctionName: name,
                     FunctionZip: fs.readFileSync(zipFilePath),
                     Handler: handler,
@@ -135,6 +136,10 @@ module.exports = {
 
 if (_testMode) {
     module.exports.AWS = AWS;
-    module.exports.lambda = _lambda;
+    module.exports.lambda = new AWS.Lambda(
+        {
+            apiVersion: '2014-11-11'
+        }
+    );
     module.exports.fs = fs;
 }
