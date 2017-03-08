@@ -63,7 +63,7 @@ describe('lambda-uploader', function() {
             assert.equal(options.Handler, handler);
             assert.equal(options.Mode, 'event');
             assert.equal(options.Role, role);
-            assert.equal(options.Runtime, 'nodejs');
+            assert.equal(options.Runtime, 'nodejs4.3');
             assert.equal(options.MemorySize, memory);
             assert.equal(options.Timeout, timeout);
 
